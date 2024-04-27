@@ -1,0 +1,14 @@
+#!/usr/bin/bash
+declare -A apps_unins=()
+file="/var/log/dpkg.log"
+while IFS= read -r line; do
+    if [[ "$line" == *"install "* ]]; then
+        app_name=${line#*install }
+        app_name=${app_name%%:*}
+        date=${line/%[[:blank:]]*/}
+        apps_unins+=(["$app_name"]="")
+        echo "${app_name} is installed at ${date}"
+    fi
+
+done <"$file"
+#echo "${!apps_unins[@]}" "${apps_unins[@]}"
